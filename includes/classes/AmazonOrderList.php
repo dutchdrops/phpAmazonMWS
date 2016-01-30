@@ -30,7 +30,7 @@ class AmazonOrderList extends AmazonOrderCore implements Iterator{
     protected $tokenFlag = false;
     protected $tokenUseFlag = false;
     private $index = 0;
-
+    public $storeData;
     /**
      * Amazon Order Lists pull a set of Orders and turn them into an array of <i>AmazonOrder</i> objects.
      * 
@@ -44,17 +44,25 @@ class AmazonOrderList extends AmazonOrderCore implements Iterator{
      * @param array|string $m [optional] <p>The files (or file) to use in Mock Mode.</p>
      * @param string $config [optional] <p>An alternate config file to set. Used for testing.</p>
      */
-    public function __construct($s = null, $mock = false, $m = null, $config = null){
-        parent::__construct($s, $mock, $m, $config);
+    public function __construct($s = null, $mock = false, $m = null, $config = null, $storeData = array()){
+
+
+
+        parent::__construct($s, $mock, $m, $config, $storeData);
+
+        //parent::setStoreData($storeData);
+
         include($this->env);
+
+
         if (file_exists($this->config)){
             include($this->config);
         } else {
             throw new Exception('Config file does not exist!');
         }
         
-        if(isset($store[$this->storeName]) && array_key_exists('marketplaceId', $store[$this->storeName])){
-            $this->options['MarketplaceId.Id.1'] = $store[$this->storeName]['marketplaceId'];
+        if(isset( $this->storeData[$this->storeName]) && array_key_exists('marketplaceId',  $this->storeData[$this->storeName])){
+            $this->options['MarketplaceId.Id.1'] =  $this->storeData[$this->storeName]['marketplaceId'];
         } else {
             $this->log("Marketplace ID is missing",'Urgent');
         }
@@ -325,7 +333,7 @@ class AmazonOrderList extends AmazonOrderCore implements Iterator{
         if (!array_key_exists('CreatedAfter', $this->options) && !array_key_exists('LastUpdatedAfter', $this->options)){
             $this->setLimits('Created');
         }
-        
+
         $this->prepareToken();
         
         $url = $this->urlbase.$this->urlbranch;
@@ -336,8 +344,10 @@ class AmazonOrderList extends AmazonOrderCore implements Iterator{
         if ($this->mockMode){
            $xml = $this->fetchMockFile()->$path;
         } else {
+
             $response = $this->sendRequest($url, array('Post'=>$query));
-            
+
+
             if (!$this->checkResponse($response)){
                 return false;
             }
@@ -346,7 +356,7 @@ class AmazonOrderList extends AmazonOrderCore implements Iterator{
         }
         
         $this->parseXML($xml);
-        
+
         $this->checkToken($xml);
         
         if ($this->tokenFlag && $this->tokenUseFlag && $r === true){
@@ -412,7 +422,8 @@ class AmazonOrderList extends AmazonOrderCore implements Iterator{
             $this->orderList[$this->index]->mockIndex = $this->mockIndex;
             $this->index++;
         }
-        
+
+
     }
     
     /**

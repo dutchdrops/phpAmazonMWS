@@ -128,6 +128,7 @@ class AmazonOrderSet extends AmazonOrderCore implements Iterator{
         if ($this->mockMode){
            $xml = $this->fetchMockFile()->$path;
         } else {
+
             $response = $this->sendRequest($url, array('Post'=>$query));
 
             if (!$this->checkResponse($response)){
@@ -138,7 +139,7 @@ class AmazonOrderSet extends AmazonOrderCore implements Iterator{
         }
         
         $this->parseXML($xml);
-        
+
     }
     
     /**
