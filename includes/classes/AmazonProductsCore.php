@@ -41,7 +41,6 @@ abstract class AmazonProductsCore extends AmazonCore{
      */
     public function __construct($s, $mock = false, $m = null, $config = null){
         parent::__construct($s, $mock, $m, $config);
-        include($this->env);
         if (file_exists($this->config)){
             include($this->config);
         } else {
@@ -54,15 +53,14 @@ abstract class AmazonProductsCore extends AmazonCore{
         }
         
         
-        if(isset($store[$s]) && array_key_exists('marketplaceId', $store[$s])){
-            $this->options['MarketplaceId'] = $store[$s]['marketplaceId'];
+        if(array_key_exists('marketplaceId', $this->storeData[$s])){
+            $this->options['MarketplaceId'] = $this->storeData[$s]['marketplaceId'];
         } else {
             $this->log("Marketplace ID is missing",'Urgent');
         }
         
-        if(isset($THROTTLE_LIMIT_PRODUCT)) {
-            $this->throttleLimit = $THROTTLE_LIMIT_PRODUCT;
-        }
+        if(isset($THROTTLE_LIMIT_PRODUCT))
+        $this->throttleLimit = $THROTTLE_LIMIT_PRODUCT;
     }
     
     /**
