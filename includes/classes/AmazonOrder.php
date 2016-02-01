@@ -43,8 +43,8 @@ class AmazonOrder extends AmazonOrderCore{
      * @param array|string $m [optional] <p>The files (or file) to use in Mock Mode.</p>
      * @param string $config [optional] <p>An alternate config file to set. Used for testing.</p>
      */
-    public function __construct($s = null, $id = null, $data = null, $mock = false, $m = null, $config = null){
-        parent::__construct($s, $mock, $m, $config);
+    public function __construct($s = null, $id = null, $data = null, $mock = false, $m = null, $config = null, $storeData = array()){
+        parent::__construct($s, $mock, $m, $config,$storeData);
         include($this->env);
         
         if($id){
@@ -125,13 +125,15 @@ class AmazonOrder extends AmazonOrderCore{
      * @return AmazonOrderItemList container for order's items
      */
     public function fetchItems($token = false){
+
         if (!isset($this->data['AmazonOrderId'])){
             return false;
         }
         if (!is_bool($token)){
             $token = false;
         }
-        $items = new AmazonOrderItemList($this->storeName,$this->data['AmazonOrderId'],$this->mockMode,$this->mockFiles,$this->config);
+
+        $items = new AmazonOrderItemList($this->storeName,$this->data['AmazonOrderId'],$this->mockMode,$this->mockFiles,$this->config, $this->storeData);
         $items->setLogPath($this->logpath);
         $items->mockIndex = $this->mockIndex;
         $items->setUseToken($token);

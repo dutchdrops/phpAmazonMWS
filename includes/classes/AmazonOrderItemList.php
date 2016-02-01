@@ -29,6 +29,7 @@ class AmazonOrderItemList extends AmazonOrderCore implements Iterator{
     protected $tokenUseFlag = false;
     private $i = 0;
     private $index = 0;
+    public $storeData =array();
 
     /**
      * AmazonItemLists contain all of the items for a given order.
@@ -46,8 +47,8 @@ class AmazonOrderItemList extends AmazonOrderCore implements Iterator{
      * @param array|string $m [optional] <p>The files (or file) to use in Mock Mode.</p>
      * @param string $config [optional] <p>An alternate config file to set. Used for testing.</p>
      */
-    public function __construct($s = null, $id=null, $mock = false, $m = null, $config = null){
-        parent::__construct($s, $mock, $m, $config);
+    public function __construct($s = null, $id=null, $mock = false, $m = null, $config = null,$storeData){
+        parent::__construct($s, $mock, $m, $config,$storeData);
         include($this->env);
         
         

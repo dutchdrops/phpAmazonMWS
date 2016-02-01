@@ -46,8 +46,6 @@ class AmazonOrderList extends AmazonOrderCore implements Iterator{
      */
     public function __construct($s = null, $mock = false, $m = null, $config = null, $storeData = array()){
 
-
-
         parent::__construct($s, $mock, $m, $config, $storeData);
 
         //parent::setStoreData($storeData);
@@ -409,6 +407,8 @@ class AmazonOrderList extends AmazonOrderCore implements Iterator{
      * @return boolean <b>FALSE</b> if no XML data is found
      */
     protected function parseXML($xml){
+
+
         if (!$xml){
             return false;
         }
@@ -417,7 +417,7 @@ class AmazonOrderList extends AmazonOrderCore implements Iterator{
             if ($key != 'Order'){
                 break;
             }
-            $this->orderList[$this->index] = new AmazonOrder($this->storeName,null,$data,$this->mockMode,$this->mockFiles,$this->config);
+            $this->orderList[$this->index] = new AmazonOrder($this->storeName,null,$data,$this->mockMode,$this->mockFiles,$this->config, $this->storeData);
             $this->orderList[$this->index]->setLogPath($this->logpath);
             $this->orderList[$this->index]->mockIndex = $this->mockIndex;
             $this->index++;
